@@ -3,6 +3,7 @@
 #include "funções.h"
 
  mapa m;
+ herói p;
 
 void aloca_mapa()
 {
@@ -62,56 +63,60 @@ int acabou()
     return 0;
 }
 
-void controla(char direção)
+void posição()
 {
-    int x=0;
-    int y=0;
-
     for (int i=0;i<m.linhas;i++)
     {
         for (int j=0;j<m.colunas;j++)
         {
             if(m.matriz[i][j]=='@')
             {
-                x=i;
-                y=j;
+                p.x=i;
+                p.y=j;
                 break;
             }
         }
     }
 
+}
+
+void controla(char direção)
+{
+    
+    if (direção != 'w' && direção != 's' && direção != 'a' && direção != 'd' )
+    return;
+
+    m.matriz[p.x][p.y]=' ';
+
     switch(direção)
     {
         case 'w':
         {
-            m.matriz[x-1][y]='@';
+            m.matriz[p.x-1][p.y]='@';
+            p.x--;
             break;
         }
 
         case 's':
         {
-            m.matriz[x+1][y]='@';
+            m.matriz[p.x+1][p.y]='@';
+            p.x++;
             break;
         }
 
         case 'a':
         {
-            m.matriz[x][y-1]='@';
+            m.matriz[p.x][p.y-1]='@';
+            p.y--;
             break;
         }
 
         case 'd':
         {
-            m.matriz[x][y+1]='@';
+            m.matriz[p.x][p.y+1]='@';
+            p.y++;
             break;
         }
 
-        default :
-        {
-            m.matriz[x][y]='@';      
-        }
-    
     }
-
-    m.matriz[x][y]=' ';
 }

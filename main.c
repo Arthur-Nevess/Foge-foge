@@ -5,6 +5,7 @@
 int main()
 {
     ler_mapa();
+    posição();
     do
     {
         char comando;
