@@ -1,6 +1,12 @@
-extern int linhas;
-extern int colunas;
-extern char** mapa;
+
+struct mapa
+{
+    int linhas;
+    int colunas;
+    char** matriz;
+};
+typedef struct mapa mapa;
+
 
 
 void aloca_mapa();
