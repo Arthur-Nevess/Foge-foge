@@ -14,7 +14,6 @@ struct posição
 };
 typedef struct posição herói;
 
-
 void aloca_mapa();
 void libera();
 void ler_mapa();

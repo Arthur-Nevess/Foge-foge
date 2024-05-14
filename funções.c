@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "funções.h"
-//#include "main.h"
+#include "main.h"
+
 
  mapa m;
  herói p;
+ 
  
 
 void aloca_mapa()
@@ -31,7 +33,7 @@ void ler_mapa ()
 
      aloca_mapa();
 
-    for(int i=0;i<6;i++)
+    for(int i=0;i<m.linhas;i++)
     {
         fscanf(p,"%s", m.matriz[i]);
     }
@@ -53,7 +55,7 @@ void imprime_mapa()
     int x=0;
     int y=0;
 
-    for(int i=0;i<6;i++)
+    for(int i=0;i<m.linhas;i++)
     {
         printf("%s\n", m.matriz[i]);
     }
@@ -71,7 +73,7 @@ void posição()
     {
         for (int j=0;j<m.colunas;j++)
         {
-            if(m.matriz[i][j]=='@')
+            if(m.matriz[i][j]==heroi)
             {
                 p.x=i;
                 p.y=j;
@@ -99,14 +101,14 @@ int p_valida(int x, int y)
 
 int eh_vazia(int x, int y)
 {
-   return m.matriz[x][y] == '.';
+   return m.matriz[x][y] == vazio;
 }
 
 void percorre_mapa(int x_origem,int y_origem,int x_destino, int y_destino)
 {
    char personagem = m.matriz[x_origem][y_origem];
     m.matriz[x_destino][y_destino]=personagem;
-    m.matriz[x_origem][y_origem]='.';
+    m.matriz[x_origem][y_origem]=vazio;
 }
 
 void esta_maiusculo(char direção)
@@ -132,25 +134,25 @@ void controla(char direção)
 
     switch(direção)
     {
-        case 'w':
+        case cima:
         {
            proximox--;
             break;
         }
 
-        case 's':
+        case baixo:
         {
            proximox++;
             break;
         }
 
-        case 'a':
+        case esquerda:
         {
             proximoy--;
             break;
         }
 
-        case 'd':
+        case direita:
         {
            proximoy++;
             break;
