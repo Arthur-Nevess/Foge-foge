@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "funções.h"
+//#include "main.h"
 
  mapa m;
  herói p;
+ 
 
 void aloca_mapa()
 {
@@ -80,43 +82,86 @@ void posição()
 
 }
 
+int eh_direção(char direção)
+{
+   return direção == 'w'||'W' || direção == 's'||'S' || direção == 'a'||'A' || direção == 'd'||'D';
+}
+
+int p_valida(int x, int y)
+{
+    if(x >= m.linhas)
+    return 0;
+    if(y>=m.colunas)
+    return 0;
+
+    return 1;
+}
+
+int eh_vazia(int x, int y)
+{
+   return m.matriz[x][y] == '.';
+}
+
+void percorre_mapa(int x_origem,int y_origem,int x_destino, int y_destino)
+{
+   char personagem = m.matriz[x_origem][y_origem];
+    m.matriz[x_destino][y_destino]=personagem;
+    m.matriz[x_origem][y_origem]='.';
+}
+
+void esta_maiusculo(char direção)
+{
+    if(direção=='W'||direção=='S'||direção=='A'||direção=='D')
+    {
+        puts("O capsLK está ligado");
+    }
+
+
+}
+
 void controla(char direção)
 {
     
-    if (direção != 'w' && direção != 's' && direção != 'a' && direção != 'd' )
+    if (!eh_direção(direção))
     return;
 
-    m.matriz[p.x][p.y]=' ';
+    int proximox = p.x;
+    int proximoy = p.y;
+
+    esta_maiusculo(direção);
 
     switch(direção)
     {
         case 'w':
         {
-            m.matriz[p.x-1][p.y]='@';
-            p.x--;
+           proximox--;
             break;
         }
 
         case 's':
         {
-            m.matriz[p.x+1][p.y]='@';
-            p.x++;
+           proximox++;
             break;
         }
 
         case 'a':
         {
-            m.matriz[p.x][p.y-1]='@';
-            p.y--;
+            proximoy--;
             break;
         }
 
         case 'd':
         {
-            m.matriz[p.x][p.y+1]='@';
-            p.y++;
+           proximoy++;
             break;
         }
-
     }
+
+    if(!p_valida(proximox, proximoy))
+    return;
+    if(!eh_vazia(proximox, proximoy))
+    return;
+    percorre_mapa(p.x,p.y,proximox,proximoy);
+    p.x=proximox;
+    p.y=proximoy;
 }
