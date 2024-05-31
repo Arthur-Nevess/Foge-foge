@@ -3,61 +3,53 @@
 #include "funções.h"
 #include "main.h"
 
-
- mapa m;
- herói p;
- 
- 
-
-void aloca_mapa()
+void aloca_mapa(mapa *m)
 {
 
-    m.matriz = malloc(sizeof(char*)*(m.linhas));
-    for(int i=0;i<m.linhas;i++)
+    m->matriz = malloc(sizeof(char*)*(m->linhas));
+    for(int i=0;i<m->linhas;i++)
     {
-        m.matriz[i] = malloc(sizeof(char)*(m.colunas+1));
+        m->matriz[i] = malloc(sizeof(char)*(m->colunas+1));
     }
 
 }
 
-void ler_mapa ()
+void ler_mapa (mapa *m)
 {
-       FILE* p = fopen("mapa.txt", "r");
-    if(p==NULL)
+    FILE* f = fopen("mapa.txt", "r");
+    if(f==NULL)
     {
         puts("Falha ao abrir arquivo");
         exit(1);
     }
 
-    fscanf(p,"%d %d", &m.linhas, &m.colunas);
-
-     aloca_mapa();
-
-    for(int i=0;i<m.linhas;i++)
+    fscanf(f,"%d %d", &m->linhas, &m->colunas);
+    aloca_mapa(m);
+    for(int i=0;i<m->linhas;i++)
     {
-        fscanf(p,"%s", m.matriz[i]);
+        fscanf(f,"%s", m->matriz[i]);
     }
-    fclose(p);
+    fclose(f);
 }
 
-void libera()
+void libera(mapa *m)
     {
-        for (int i=0;i<m.linhas;i++)
+        for (int i=0;i<m->linhas;i++)
         {
-            free(m.matriz[i]);
+            free(m->matriz[i]);
         }
-        free(m.matriz);
+        free(m->matriz);
     }
 
-void imprime_mapa()
+void imprime_mapa(mapa *m)
 {
     //Espaço para variaveis
     int x=0;
     int y=0;
 
-    for(int i=0;i<m.linhas;i++)
+    for(int i=0;i<m->linhas;i++)
     {
-        printf("%s\n", m.matriz[i]);
+        printf("%s\n", m->matriz[i]);
     }
 
 }
@@ -67,16 +59,16 @@ int acabou()
     return 0;
 }
 
-void posição()
+void posição(mapa *m,herói *p)
 {
-    for (int i=0;i<m.linhas;i++)
+    for (int i=0;i<m->linhas;i++)
     {
-        for (int j=0;j<m.colunas;j++)
+        for (int j=0;j<m->colunas;j++)
         {
-            if(m.matriz[i][j]==heroi)
+            if(m->matriz[i][j]==heroi)
             {
-                p.x=i;
-                p.y=j;
+                p->x=i;
+                p->y=j;
                 break;
             }
         }
@@ -89,26 +81,11 @@ int eh_direção(char direção)
    return direção == 'w'||'W' || direção == 's'||'S' || direção == 'a'||'A' || direção == 'd'||'D';
 }
 
-int p_valida(int x, int y)
+void percorre_mapa(int x_origem,int y_origem,int x_destino, int y_destino,mapa *m)
 {
-    if(x >= m.linhas)
-    return 0;
-    if(y>=m.colunas)
-    return 0;
-
-    return 1;
-}
-
-int eh_vazia(int x, int y)
-{
-   return m.matriz[x][y] == vazio;
-}
-
-void percorre_mapa(int x_origem,int y_origem,int x_destino, int y_destino)
-{
-   char personagem = m.matriz[x_origem][y_origem];
-    m.matriz[x_destino][y_destino]=personagem;
-    m.matriz[x_origem][y_origem]=vazio;
+   char personagem = m->matriz[x_origem][y_origem];
+    m->matriz[x_destino][y_destino]=personagem;
+    m->matriz[x_origem][y_origem]=vazio;
 }
 
 void esta_maiusculo(char direção)
@@ -121,49 +98,3 @@ void esta_maiusculo(char direção)
 
 }
 
-void controla(char direção)
-{
-    
-    if (!eh_direção(direção))
-    return;
-
-    int proximox = p.x;
-    int proximoy = p.y;
-
-    esta_maiusculo(direção);
-
-    switch(direção)
-    {
-        case cima:
-        {
-           proximox--;
-            break;
-        }
-
-        case baixo:
-        {
-           proximox++;
-            break;
-        }
-
-        case esquerda:
-        {
-            proximoy--;
-            break;
-        }
-
-        case direita:
-        {
-           proximoy++;
-            break;
-        }
-    }
-
-    if(!p_valida(proximox, proximoy))
-    return;
-    if(!eh_vazia(proximox, proximoy))
-    return;
-    percorre_mapa(p.x,p.y,proximox,proximoy);
-    p.x=proximox;
-    p.y=proximoy;
-}
