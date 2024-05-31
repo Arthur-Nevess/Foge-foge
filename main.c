@@ -2,9 +2,29 @@
 # include <stdlib.h>
 # include "funções.h"
 #include "main.h"
+#include <termios.h>
+#include <unistd.h>
 
  mapa m;
  herói p;
+
+void configurar_terminal() 
+{
+    struct termios newtio;
+    tcgetattr(STDIN_FILENO, &newtio); // Pega a configuração atual do terminal
+    newtio.c_lflag &= ~ICANON; // Desativa o modo canônico
+    newtio.c_lflag &= ~ECHO;   // Desativa o eco
+    tcsetattr(STDIN_FILENO, TCSANOW, &newtio); // Aplica a nova configuração
+}
+
+void restaurar_terminal()
+{
+    struct termios newtio;
+    tcgetattr(STDIN_FILENO, &newtio); // Pega a configuração atual do terminal
+    newtio.c_lflag |= ICANON; // Ativa o modo canônico
+    newtio.c_lflag |= ECHO;   // Ativa o eco
+    tcsetattr(STDIN_FILENO, TCSANOW, &newtio); // Aplica a nova configuração
+}
 
  int eh_vazia(int x, int y)
 {
@@ -76,7 +96,9 @@ int main()
     {
         char comando;
         imprime_mapa(&m);
+        configurar_terminal();
         scanf(" %c", &comando);
+        restaurar_terminal();
         controla(comando);
 
     }while(!acabou());
