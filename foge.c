@@ -2,12 +2,40 @@
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
+#include<time.h>
 #include "funções.h"
 #include "foge.h"
 
 
  mapa m;
  herói p;
+
+int fantasma_anda(int x_origem, int y_origem, int*x_destino,int *y_destino)
+{
+    int posições [4][2]=
+    {
+        {x_origem,y_origem+1},
+        {x_origem,y_origem-1},
+        {x_origem+1,y_origem},
+        {x_origem-1,y_origem}
+    };
+
+    srand(time(0));
+    for(int i=0;i<15;i++)
+    {
+        int posição=rand()%4;
+
+        if(p_valida(posições[posição][0],posições[posição][1]) && eh_vazia (posições[posição][0],posições[posição][1]))
+        {
+            *x_destino=posições[posição][0];
+            *y_destino=posições[posição][1];
+            return 1;
+        }
+
+       return 0; 
+    }
+
+}
 
 void fantasmas()
 {
@@ -20,14 +48,17 @@ void fantasmas()
         {
             if(copia.matriz[i][j]==fantasma)
             {
-                if(eh_vazia(i,(j+1)) && p_valida(i,(j+1)))
+                int x_destino;
+                int y_destino;
+                int encontrou=fantasma_anda(i,j,&x_destino,&y_destino);
+                if(encontrou)
                 {
-                    percorre_mapa(i,j,i,(j+1),&m);
+                    percorre_mapa(i,j,x_destino,y_destino,&m);
                 }
             }
         }
     }
-    libera(destino);
+    libera(&copia);
 }
 
 void configurar_terminal() 
