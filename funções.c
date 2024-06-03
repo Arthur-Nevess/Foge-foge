@@ -1,7 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "funções.h"
-#include "main.h"
+#include "foge.h"
+
+
+void copia_mapa(mapa *origem, mapa*destino)
+{
+    destino->colunas=origem->colunas;
+    destino->linhas=origem->linhas;
+    aloca_mapa(destino);
+    for (int i=0;i<origem->linhas;i++)
+    {
+       strcpy(destino->matriz[i],origem->matriz[i]);
+    }
+}
 
 void aloca_mapa(mapa *m)
 {

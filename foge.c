@@ -1,12 +1,34 @@
-# include <stdio.h>
-# include <stdlib.h>
-# include "funções.h"
-#include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
+#include "funções.h"
+#include "foge.h"
+
 
  mapa m;
  herói p;
+
+void fantasmas()
+{
+    mapa copia;
+
+    copia_mapa(&m,&copia);
+    for(int i=0;i<m.linhas;i++)
+    {
+        for(int j=0;j<m.colunas;j++)
+        {
+            if(copia.matriz[i][j]==fantasma)
+            {
+                if(eh_vazia(i,(j+1)) && p_valida(i,(j+1)))
+                {
+                    percorre_mapa(i,j,i,(j+1),&m);
+                }
+            }
+        }
+    }
+    libera(destino);
+}
 
 void configurar_terminal() 
 {
@@ -98,6 +120,7 @@ int main()
         imprime_mapa(&m);
         configurar_terminal();
         scanf(" %c", &comando);
+        fantasmas();
         restaurar_terminal();
         controla(comando);
 

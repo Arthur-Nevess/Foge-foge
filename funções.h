@@ -14,6 +14,8 @@ struct posição
 };
 typedef struct posição herói;
 
+void fantasmas();
+void copia_mapa(mapa *origem, mapa*destino);
 void aloca_mapa(mapa *m);
 void libera(mapa *m);
 void ler_mapa (mapa *m);
