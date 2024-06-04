@@ -67,12 +67,13 @@ void imprime_mapa(mapa *m)
 
 }
 
-int acabou()
+int acabou(mapa *m,herói *p)
 {
-    return 0;
+    int achou=pac_no_mapa(m,p);
+    return !achou;
 }
 
-void posição(mapa *m,herói *p)
+int pac_no_mapa(mapa *m,herói *p)
 {
     for (int i=0;i<m->linhas;i++)
     {
@@ -82,11 +83,11 @@ void posição(mapa *m,herói *p)
             {
                 p->x=i;
                 p->y=j;
-                break;
+                return 1;;
             }
         }
     }
-
+    return 0;
 }
 
 int eh_direção(char direção)

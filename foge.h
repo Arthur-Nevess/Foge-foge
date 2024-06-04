@@ -7,3 +7,4 @@
 #define vazio '.'
 #define parede_vertical '|'
 #define parede_horizontal '-'
+#define parede_lista '_'

@@ -10,6 +10,21 @@
  mapa m;
  herói p;
 
+int eh_parede(int x, int y)
+{
+    return m.matriz[x][y]== parede_horizontal || m.matriz[x][y]== parede_vertical || m.matriz[x][y]== parede_lista;
+}
+
+int eh_personagem(int x,int y,char personagem)
+{
+    return m.matriz[x][y]==personagem;
+}
+
+int pode_andar(int x,int y,char personagem)
+{
+    return p_valida(x,y) && !eh_parede(x,y) && !eh_personagem(x,y,personagem);
+}
+
 int fantasma_anda(int x_origem, int y_origem, int*x_destino,int *y_destino)
 {
     int posições [4][2]=
@@ -25,7 +40,7 @@ int fantasma_anda(int x_origem, int y_origem, int*x_destino,int *y_destino)
     {
         int posição=rand()%4;
 
-        if(p_valida(posições[posição][0],posições[posição][1]) && eh_vazia (posições[posição][0],posições[posição][1]))
+        if(pode_andar(posições[posição][0],posições[posição][1],fantasma))
         {
             *x_destino=posições[posição][0];
             *y_destino=posições[posição][1];
@@ -122,9 +137,7 @@ void controla(char direção)
         }
     }
 
-    if(!p_valida(proximox, proximoy))
-    return;
-    if(!eh_vazia(proximox, proximoy))
+    if(!pode_andar(proximox,proximoy,heroi))
     return;
     percorre_mapa(p.x,p.y,proximox,proximoy,&m);
     p.x=proximox;
@@ -144,7 +157,7 @@ int p_valida (int x, int y)
 int main()
 {
     ler_mapa(&m);
-    posição(&m,&p);
+    pac_no_mapa(&m,&p);
     do
     {
         char comando;
@@ -155,7 +168,7 @@ int main()
         restaurar_terminal();
         controla(comando);
 
-    }while(!acabou());
+    }while(!acabou(&m,&p));
     
     libera(&m);
 
